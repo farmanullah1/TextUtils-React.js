@@ -1,17 +1,45 @@
-import React from 'react'
+import React from 'react';
 
 function Alert(props) {
-    const capitalize = (word)=>{
-        const lower = word.toLowerCase();
-        return lower.charAt(0).toUpperCase() + lower.slice(1);
+  if (!props.alert) return null;
+
+  const getIcon = (type) => {
+    switch(type) {
+      case 'success': return '✅';
+      case 'danger': return '❌';
+      case 'warning': return '⚠️';
+      default: return '💡';
     }
-    return (
-        <div style={{height: '50px'}}>
-        {props.alert && <div className={`alert alert-${props.alert.type} alert-dismissible fade show`} role="alert">
-           <strong>{capitalize(props.alert.type)}</strong>: {props.alert.msg} 
-        </div>}
+  };
+
+  const getTitle = (type) => {
+    switch(type) {
+      case 'success': return 'Success';
+      case 'danger': return 'Error';
+      case 'warning': return 'Warning';
+      default: return 'Notice';
+    }
+  }
+
+  // Check if dark mode is active to style the alert background correctly
+  const isDarkMode = document.body.style.backgroundColor === 'rgb(11, 17, 32)' || document.body.style.backgroundColor === '#0b1120';
+
+  return (
+    <div className="modern-toast-container">
+      <div className={`modern-toast ${props.alert.type}`} style={{
+        backgroundColor: isDarkMode ? '#1e293b' : '#ffffff',
+        color: isDarkMode ? '#f8fafc' : '#0f172a'
+      }}>
+        <span style={{ fontSize: '1.4rem' }}>{getIcon(props.alert.type)}</span>
+        <div>
+          <strong style={{ display: 'block', fontSize: '0.95rem', marginBottom: '2px' }}>
+            {getTitle(props.alert.type)}
+          </strong>
+          <span style={{ opacity: 0.85, fontSize: '0.85rem' }}>{props.alert.msg}</span>
         </div>
-    )
+      </div>
+    </div>
+  );
 }
 
-export default Alert
+export default Alert;

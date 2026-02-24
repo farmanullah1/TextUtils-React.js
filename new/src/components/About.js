@@ -1,55 +1,47 @@
 import React from "react";
 
 export default function About({ mode }) {
-  const myStyle = {
-    backgroundColor: mode === "dark" ? "#042743" : "white",
-    color: mode === "dark" ? "white" : "#042743",
-  };
+  const isDark = mode === "dark";
+  const cardBg = isDark ? "#1e293b" : "#ffffff";
+  const textColor = isDark ? "#f8fafc" : "#0f172a";
 
   return (
-    <div className="container my-5" style={myStyle}>
-      <h1>About Us</h1>
+    <div className="container py-5">
+      <div className="text-center mb-5">
+        <h1 className="fw-bold display-5">About <span style={{color: '#6366f1'}}>TextUtils</span></h1>
+        <p className="lead" style={{ opacity: 0.8 }}>Your all-in-one toolkit for analyzing, formatting, and extracting text directly in your browser.</p>
+      </div>
 
-      <div className="accordion" id="accordionExample">
-
-        <div className="accordion-item" style={myStyle}>
-          <h2 className="accordion-header">
-            <button
-              className="accordion-button"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#collapseOne"
-              style={myStyle}
-            >
-              Analyze Text
-            </button>
-          </h2>
-          <div id="collapseOne" className="accordion-collapse collapse show">
-            <div className="accordion-body">
-              TextUtils helps you analyze and manipulate text easily.
+      <div className="row g-4">
+        <div className="col-md-4">
+          <div className="card h-100 shadow-sm border-0 p-4 modern-card" style={{ backgroundColor: cardBg, color: textColor }}>
+            <div className="mb-3">
+              <span className="display-4 text-primary">⚡</span>
             </div>
+            <h4 className="fw-bold">Lightning Fast</h4>
+            <p style={{ opacity: 0.8 }}>Everything happens right inside your browser. No server calls, no waiting, and completely offline capable once loaded.</p>
           </div>
         </div>
 
-        <div className="accordion-item" style={myStyle}>
-          <h2 className="accordion-header">
-            <button
-              className="accordion-button collapsed"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#collapseTwo"
-              style={myStyle}
-            >
-              Free & Fast
-            </button>
-          </h2>
-          <div id="collapseTwo" className="accordion-collapse collapse">
-            <div className="accordion-body">
-              Completely free and runs instantly in your browser.
+        <div className="col-md-4">
+          <div className="card h-100 shadow-sm border-0 p-4 modern-card" style={{ backgroundColor: cardBg, color: textColor }}>
+            <div className="mb-3">
+              <span className="display-4 text-success">🔒</span>
             </div>
+            <h4 className="fw-bold">Privacy First</h4>
+            <p style={{ opacity: 0.8 }}>We do not store or save your text. Your sensitive documents, emails, and data never leave your personal computer.</p>
           </div>
         </div>
 
+        <div className="col-md-4">
+          <div className="card h-100 shadow-sm border-0 p-4 modern-card" style={{ backgroundColor: cardBg, color: textColor }}>
+            <div className="mb-3">
+              <span className="display-4 text-warning">🛠️</span>
+            </div>
+            <h4 className="fw-bold">15+ Powerful Tools</h4>
+            <p style={{ opacity: 0.8 }}>Go beyond word counts. Instantly extract emails, strip punctuation, fix spacing, encode to Base64, and calculate reading time.</p>
+          </div>
+        </div>
       </div>
     </div>
   );

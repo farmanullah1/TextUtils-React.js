@@ -4,67 +4,41 @@ import TextForm from './components/TextForm';
 import About from './components/About';
 import Alert from './components/Alert';
 import React, { useState, useEffect } from 'react';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   const [mode, setMode] = useState('light');
   const [alert, setAlert] = useState(null);
 
-  // 🔔 Show Alert
   const showAlert = (message, type) => {
     setAlert({ msg: message, type });
-    setTimeout(() => setAlert(null), 1500);
+    setTimeout(() => setAlert(null), 2500);
   };
 
-  // 🎨 Handle Mode Toggle
   const toggleMode = () => {
     setMode(prevMode => (prevMode === 'light' ? 'dark' : 'light'));
   };
 
-  // 🌙 Side Effects for Mode Change
   useEffect(() => {
     if (mode === 'dark') {
-      document.body.style.backgroundColor = '#042743';
-      document.title = 'TextUtils - Dark Mode';
-      showAlert("Dark mode has been enabled", "success");
+      document.body.style.backgroundColor = '#0b1120'; // Deeper, richer dark slate
+      document.body.style.color = '#f8fafc';
     } else {
-      document.body.style.backgroundColor = 'white';
-      document.title = 'TextUtils - Light Mode';
-      showAlert("Light mode has been enabled", "success");
+      document.body.style.backgroundColor = '#f8fafc'; // Clean off-white
+      document.body.style.color = '#0f172a';
     }
   }, [mode]);
 
   return (
     <Router>
-      <Navbar
-        title="TextUtils"
-        aboutText="About"
-        mode={mode}
-        toggleMode={toggleMode}
-      />
-
+      <Navbar title="TextUtils" mode={mode} toggleMode={toggleMode} />
       <Alert alert={alert} />
-
-      <div className="container my-3">
+      <div className="container py-4">
         <Routes>
-          <Route
-            path="/about"
-            element={<About mode={mode} />}
-          />
-
+          <Route path="/about" element={<About mode={mode} />} />
           <Route
             path="/"
-            element={
-              <TextForm
-                showAlert={showAlert}
-                heading="Try TextUtils - word counter, character counter, remove extra spaces"
-                mode={mode}
-              />
-            }
+            element={<TextForm showAlert={showAlert} mode={mode} />}
           />
         </Routes>
       </div>
