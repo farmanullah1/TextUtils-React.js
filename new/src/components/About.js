@@ -1,37 +1,14 @@
-import React, { useState } from 'react'
+import React from "react";
 
-export default function About() {
-
-  const [myStyle, setMyStyle] = useState({
-    color: 'white',
-    backgroundColor: 'black',
-    btnBackgroundColor: 'white',
-    border: '1px solid white'
-
-  })
-  const [btnText, setBtnText] = useState("Enable Light Mode")
-
-  const toggleStyle = () => {
-    if (myStyle.color === 'white') {
-      setMyStyle({
-        color: 'black',
-        backgroundColor: 'white',
-        btnColor: 'black'
-      })
-      setBtnText("Enable Dark Mode")
-    } else {
-      setMyStyle({
-        color: 'white',
-        backgroundColor: 'black',
-        btnBackgroundColor: 'white'
-      })
-      setBtnText("Enable Light Mode")
-    }
-  }
+export default function About({ mode }) {
+  const myStyle = {
+    backgroundColor: mode === "dark" ? "#042743" : "white",
+    color: mode === "dark" ? "white" : "#042743",
+  };
 
   return (
-    <div className="container" style={myStyle}>
-      <h1 className='my-5'>About Us</h1>
+    <div className="container my-5" style={myStyle}>
+      <h1>About Us</h1>
 
       <div className="accordion" id="accordionExample">
 
@@ -42,16 +19,14 @@ export default function About() {
               type="button"
               data-bs-toggle="collapse"
               data-bs-target="#collapseOne"
-              aria-expanded="true"
-              aria-controls="collapseOne"
               style={myStyle}
             >
-              Accordion Item #1
+              Analyze Text
             </button>
           </h2>
           <div id="collapseOne" className="accordion-collapse collapse show">
-            <div className="accordion-body" style={myStyle}>
-              This is the first accordion body.
+            <div className="accordion-body">
+              TextUtils helps you analyze and manipulate text easily.
             </div>
           </div>
         </div>
@@ -65,26 +40,17 @@ export default function About() {
               data-bs-target="#collapseTwo"
               style={myStyle}
             >
-              Accordion Item #2
+              Free & Fast
             </button>
           </h2>
           <div id="collapseTwo" className="accordion-collapse collapse">
-            <div className="accordion-body" style={myStyle}>
-              This is the second accordion body.
+            <div className="accordion-body">
+              Completely free and runs instantly in your browser.
             </div>
           </div>
         </div>
 
       </div>
-
-      <button
-        onClick={toggleStyle}
-        type="button"
-        className="btn btn-primary my-3"
-      >
-        {btnText}
-      </button>
-
     </div>
-  )
+  );
 }

@@ -1,135 +1,103 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from "react";
 
-export default function TextForm(props) {
+export default function TextForm({ showAlert, heading, mode }) {
+  const [text, setText] = useState("");
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
-  const [text, setText] = useState('')
-  const [isSpeaking, setIsSpeaking] = useState(false)
+  const handleChange = (e) => setText(e.target.value);
 
-  const handleUpClick = () => {
-    setText(text.toUpperCase())
-    props.showAlert("Converted to uppercase!", "success")
-  }
+  const transformText = (type) => {
+    if (!text.trim()) return;
 
-  const handleLoClick = () => {
-    setText(text.toLowerCase())
-    props.showAlert("Converted to lowercase!", "success")
-  }
+    let newText = text;
 
-  const handleClearClick = () => {
-    setText('')
-    props.showAlert("Text Cleared!", "success")
-  }
-
-  const handleFirstLetterUppercaseClick = () => {
-    if (text.length > 0) {
-      setText(text.charAt(0).toUpperCase() + text.slice(1))
-      props.showAlert("First letter capitalized!", "success")
+    switch (type) {
+      case "upper":
+        newText = text.toUpperCase();
+        showAlert("Converted to uppercase!", "success");
+        break;
+      case "lower":
+        newText = text.toLowerCase();
+        showAlert("Converted to lowercase!", "success");
+        break;
+      case "clear":
+        newText = "";
+        showAlert("Text cleared!", "success");
+        break;
+      case "spaces":
+        newText = text.replace(/\s+/g, " ").trim();
+        showAlert("Extra spaces removed!", "success");
+        break;
+      default:
+        break;
     }
-  }
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(text)
-    props.showAlert("Copied to Clipboard!", "success")
-  }
+    setText(newText);
+  };
 
-  const handleExtraSpaces = () => {
-    let newText = text.split(/\s+/).join(" ")
-    setText(newText)
-    props.showAlert("Extra spaces removed!", "success")
-  }
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      showAlert("Copied to clipboard!", "success");
+    } catch {
+      showAlert("Clipboard not supported!", "danger");
+    }
+  };
 
   const speak = () => {
-    if (!isSpeaking) {
-      let msg = new SpeechSynthesisUtterance(text)
-      window.speechSynthesis.speak(msg)
-      setIsSpeaking(true)
+    if (!window.speechSynthesis) return;
+
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
     } else {
-      window.speechSynthesis.cancel()
-      setIsSpeaking(false)
+      const msg = new SpeechSynthesisUtterance(text);
+      window.speechSynthesis.speak(msg);
+      setIsSpeaking(true);
     }
-  }
+  };
 
-  const handleOnChange = (event) => {
-    setText(event.target.value)
-  }
+  useEffect(() => {
+    return () => window.speechSynthesis.cancel();
+  }, []);
 
-  // Accurate word count
-  const wordCount = text.split(/\s+/).filter((word) => word.length !== 0).length
+  const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
+
+  const textColor = mode === "dark" ? "white" : "#042743";
+  const bgColor = mode === "dark" ? "#13466e" : "white";
 
   return (
     <>
-      <div className="container"
-        style={{ color: props.mode === 'dark' ? 'white' : '#042743' }}>
+      <div className="container" style={{ color: textColor }}>
+        <h1>{heading}</h1>
 
-        <h1 className="mb-4">{props.heading}</h1>
+        <textarea
+          className="form-control"
+          value={text}
+          onChange={handleChange}
+          rows="8"
+          style={{ backgroundColor: bgColor, color: textColor }}
+        />
 
-        <div className="mb-3">
-          <textarea
-            className="form-control"
-            value={text}
-            onChange={handleOnChange}
-            style={{
-              backgroundColor: props.mode === 'dark' ? '#13466e' : 'white',
-              color: props.mode === 'dark' ? 'white' : '#042743'
-            }}
-            rows="8"
-          ></textarea>
+        <div className="my-3">
+          <button className="btn btn-primary mx-1 my-1" disabled={!text} onClick={() => transformText("upper")}>Uppercase</button>
+          <button className="btn btn-primary mx-1 my-1" disabled={!text} onClick={() => transformText("lower")}>Lowercase</button>
+          <button className="btn btn-primary mx-1 my-1" disabled={!text} onClick={() => transformText("spaces")}>Remove Spaces</button>
+          <button className="btn btn-success mx-1 my-1" disabled={!text} onClick={handleCopy}>Copy</button>
+          <button className="btn btn-danger mx-1 my-1" disabled={!text} onClick={() => transformText("clear")}>Clear</button>
+          <button className="btn btn-warning mx-1 my-1" disabled={!text} onClick={speak}>
+            {isSpeaking ? "Stop" : "Speak"}
+          </button>
         </div>
-
-        <button disabled={text.length === 0}
-          className="btn btn-primary mx-1 my-1"
-          onClick={handleUpClick}>
-          Uppercase
-        </button>
-
-        <button disabled={text.length === 0}
-          className="btn btn-primary mx-1 my-1"
-          onClick={handleLoClick}>
-          Lowercase
-        </button>
-
-        <button disabled={text.length === 0}
-          className="btn btn-primary mx-1 my-1"
-          onClick={handleFirstLetterUppercaseClick}>
-          First Letter Uppercase
-        </button>
-
-        <button disabled={text.length === 0}
-          className="btn btn-primary mx-1 my-1"
-          onClick={handleExtraSpaces}>
-          Remove Extra Spaces
-        </button>
-
-        <button disabled={text.length === 0}
-          className="btn btn-primary mx-1 my-1"
-          onClick={handleCopy}>
-          Copy Text
-        </button>
-
-        <button disabled={text.length === 0}
-          className="btn btn-danger mx-1 my-1"
-          onClick={handleClearClick}>
-          Clear
-        </button>
-
-        <button disabled={text.length === 0}
-          onClick={speak}
-          className="btn btn-warning mx-1 my-1">
-          {isSpeaking ? "Stop" : "Speak"}
-        </button>
-
       </div>
 
-      <div className="container my-3"
-        style={{ color: props.mode === 'dark' ? 'white' : '#042743' }}>
-
-        <h2>Your text summary</h2>
-        <p>{wordCount} words and {text.length} characters</p>
-        <p>{(0.008 * wordCount).toFixed(2)} Minutes read</p>
-
-        <h2>Preview</h2>
-        <p>{text.length > 0 ? text : "Nothing to preview!"}</p>
+      <div className="container my-3" style={{ color: textColor }}>
+        <h2>Summary</h2>
+        <p>{wordCount} words | {text.length} characters</p>
+        <p>{(0.008 * wordCount).toFixed(2)} minutes read</p>
+        <h3>Preview</h3>
+        <p>{text || "Nothing to preview!"}</p>
       </div>
     </>
-  )
+  );
 }
