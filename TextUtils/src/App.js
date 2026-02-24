@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
-  const [mode, setMode] = useState('light');
+  const [mode, setMode] = useState('dark'); 
   const [alert, setAlert] = useState(null);
 
   const showAlert = (message, type) => {
@@ -21,25 +21,20 @@ function App() {
 
   useEffect(() => {
     if (mode === 'dark') {
-      document.body.style.backgroundColor = '#0b1120'; // Deeper, richer dark slate
-      document.body.style.color = '#f8fafc';
+      document.body.className = 'bg-animated-dark';
     } else {
-      document.body.style.backgroundColor = '#f8fafc'; // Clean off-white
-      document.body.style.color = '#0f172a';
+      document.body.className = 'bg-animated-light';
     }
   }, [mode]);
 
   return (
     <Router basename="/TextUtils-React.js">
-      <Navbar title="TextUtils" mode={mode} toggleMode={toggleMode} />
+      <Navbar title="TextUtils Studio" mode={mode} toggleMode={toggleMode} />
       <Alert alert={alert} />
       <div className="container py-4">
         <Routes>
           <Route path="/about" element={<About mode={mode} />} />
-          <Route
-            path="/"
-            element={<TextForm showAlert={showAlert} mode={mode} />}
-          />
+          <Route path="/" element={<TextForm showAlert={showAlert} mode={mode} />} />
         </Routes>
       </div>
     </Router>
