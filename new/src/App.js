@@ -30,7 +30,7 @@ function App() {
   }, [mode]);
 
   return (
-    <Router>
+    <Router basename="/TextUtils-React.js">
       <Navbar title="TextUtils" mode={mode} toggleMode={toggleMode} />
       <Alert alert={alert} />
       <div className="container py-4">
